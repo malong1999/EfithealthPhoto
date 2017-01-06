@@ -55,9 +55,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         super.onStart();
         requestCodeQRCodePermissions();
         mQRCodeView.startCamera();
-//        mQRCodeView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
 
         mQRCodeView.showScanRect();
+        Toast.makeText(this, "开始扫码", Toast.LENGTH_SHORT).show();
         mQRCodeView.startSpot();
 
     }
@@ -85,31 +85,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         vibrate();
         play();
-        getCamera();
+        mQRCodeView.stopCamera();
+        startActivity(new Intent(MainActivity.this,CaptureActivity.class));
+//        getCamera();
 //        mQRCodeView.startSpot();
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    @AfterPermissionGranted(MY_CAMMER)
-    private void getCamera() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)) {
-            mQRCodeView.stopCamera();
-//            mQRCodeView.onDestroy();
-//            mQRCodeView.setDelegate(null);
-//            mQRCodeView.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                }
-//            },2000);
-            Intent intentFromCapture = CameraUtils.getOpenCameraIntent();
-            intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(new File(Cons.CACHE_DIR_IMAGE +  "temp.png")));
-            startActivityForResult(intentFromCapture, CAMERA_REQUEST_CODE);
-        } else {
-            EasyPermissions.requestPermissions(this, "需要相机权限", MY_CAMMER,
-                    Manifest.permission.CAMERA);
-        }
     }
 
 
